@@ -1,6 +1,16 @@
 server:
   port: 81
 
+spring:
+  application:
+    name: cloud-order-service
+  zipkin:
+    base-url: http://localhost:9411  #监控的数据发送到9411端口
+  sleuth:
+    sampler:
+      #采样率介于0到1之间，1表示全部采样。
+      probability: 1
+
 eureka:
   client:
     register-with-eureka: false
