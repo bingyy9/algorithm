@@ -23,4 +23,9 @@ public class Point {
     public void setY(int y) {
         this.y = y;
     }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
 }

@@ -5,6 +5,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <iostream>
+#include "Student.h"
+#include <stdarg.h>
+#include "ArrayList.hpp"
+#include <algorithm>
+#include <cctype>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <list>
+#include <set>
+using namespace std;
 
 #define TAG "JNI_TAG"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
@@ -133,10 +145,6 @@ void change2(int* a, int* b){
     *a = *a + *b;
     *b = *a - *b;
     *a = *a - *b;
-}
-
-void add(int a, int b){
-    LOGE("a + b = %d", a+b);
 }
 
 void operate(void (method)(int, int), int num1, int num2){
@@ -329,18 +337,44 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_Sample_staticLocalCac
         LOGE("jfieldId not null");
     }
     env->SetStaticObjectField(clazz, jfieldId, name);
+
 }
 
-typedef struct {
-    int width;
-    int height;
-    int format;
-} AndroidBitmapInfo_; //匿名结构体取别名
-
-void AndroidBitmapInfo_getInfo(AndroidBitmapInfo_* androidBitmapInfo){
-    androidBitmapInfo->width = 200;
-    androidBitmapInfo->height = 300;
+bool compare(const Student &_Left, const Student &_Right){
+    return _Left.getName() > _Right.getName();
 }
+
+//函数对象 仿函数
+struct compareFunction{
+    //函数重载了（）运算符，函数对象
+    bool operator()(const Student &_Left, const Student &_Right) const {
+        return _Left.getName() > _Right.getName();
+    }
+};
+
+void main2(){
+
+    //谓词（函数谓词）:按照特定的规则编写的函数
+    set<Student, compareFunction> s;
+    Student s1("Bing", 1);
+    Student s2("Bing", 3);
+    Student s3("Bing", 2);
+    s.insert(s1);
+    s.insert(s2);
+    s.insert(s3);
+    for(set<Student>::iterator it=s.begin(); it!=s.end(); it++){
+
+    }
+
+    //重复的插入，不会报错，返回两个值。插入迭代器的位置和是否插入成功。
+    pair<set<Student, less<Student>>::iterator, bool> result = s.insert(s1);
+    result.first;//获取第一个参数
+    bool insert_successed = result.second;
+    if(insert_successed){
+        cout << "insert success" << endl;
+    }
+}
+
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -370,3 +404,19 @@ Java_com_example_testjni_Sample_exception(JNIEnv *env, jclass clazz) {
 
 
 
+
+extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_Sample_arraycopy(JNIEnv *env, jclass clazz, jobject src, jint src_pos, jobject dest, jint dest_pos, jint length) {
+    //static_cast/interpret_cast 都可。
+    jobjectArray src_array = static_cast<jobjectArray>(src);
+    jobjectArray dst_array = static_cast<jobjectArray>(dest);
+
+    if(src_array == NULL || dst_array == NULL){
+        LOGE("case not success");
+        return;
+    }
+
+    for(int i = 0; i<length; i++){
+        jobject obj = env->GetObjectArrayElement(src_array, i);
+        env->SetObjectArrayElement(dst_array, i, obj);
+    }
+}

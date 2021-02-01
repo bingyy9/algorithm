@@ -13,4 +13,7 @@ public class Sample {
 
     public static native void staticLocalCache(String str);
     public static native void exception();
+    public static native void arraycopy(Object src,  int  srcPos,
+                                        Object dest, int destPos,
+                                        int length);
 }

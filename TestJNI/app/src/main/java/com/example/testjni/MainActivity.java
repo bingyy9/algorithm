@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         globalRef();
         setLocalCache();
         exception();
+        systemArrayCopy();
     }
 
     public void compressVideo(View view) {
@@ -142,6 +143,20 @@ public class MainActivity extends AppCompatActivity {
             Sample.exception();
         }catch (Exception e){
             Log.e(TAG, " cache exception: " + e);
+        }
+    }
+
+    private void systemArrayCopy(){
+        Person[] persons = new Person[10];
+        Person[] persons2 = new Person[10];
+
+        for (int i = 0; i<persons.length; i++){
+            persons[i] = new Person("Bing", i);
+        }
+
+        Sample.arraycopy(persons, 0, persons2, 0, 10);
+        for (int i = 0; i<persons2.length; i++){
+//            Log.e(TAG, "persons copy value: " + persons2[i].getAge());
         }
     }
 
