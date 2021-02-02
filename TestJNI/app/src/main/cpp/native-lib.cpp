@@ -16,6 +16,9 @@
 #include <queue>
 #include <list>
 #include <set>
+#include <map>
+#include <functional>
+
 using namespace std;
 
 #define TAG "JNI_TAG"
@@ -344,35 +347,14 @@ bool compare(const Student &_Left, const Student &_Right){
     return _Left.getName() > _Right.getName();
 }
 
-//函数对象 仿函数
-struct compareFunction{
-    //函数重载了（）运算符，函数对象
-    bool operator()(const Student &_Left, const Student &_Right) const {
-        return _Left.getName() > _Right.getName();
+class Greater2{
+public:
+    bool operator()(const int& num) {
+        return num > 2;
     }
 };
 
 void main2(){
-
-    //谓词（函数谓词）:按照特定的规则编写的函数
-    set<Student, compareFunction> s;
-    Student s1("Bing", 1);
-    Student s2("Bing", 3);
-    Student s3("Bing", 2);
-    s.insert(s1);
-    s.insert(s2);
-    s.insert(s3);
-    for(set<Student>::iterator it=s.begin(); it!=s.end(); it++){
-
-    }
-
-    //重复的插入，不会报错，返回两个值。插入迭代器的位置和是否插入成功。
-    pair<set<Student, less<Student>>::iterator, bool> result = s.insert(s1);
-    result.first;//获取第一个参数
-    bool insert_successed = result.second;
-    if(insert_successed){
-        cout << "insert success" << endl;
-    }
 }
 
 
