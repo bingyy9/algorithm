@@ -16,7 +16,16 @@ android {
         externalNativeBuild {
             cmake {
                 cppFlags "-fexceptions"
+                //过滤，只使用这个版本的库,否则默认的可是4个平台
+                abiFilters 'armeabi-v7a','arm64-v8a'
             }
+        }
+    }
+
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['src/main/jni']
         }
     }
 

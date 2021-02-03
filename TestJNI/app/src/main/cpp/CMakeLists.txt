@@ -9,6 +9,38 @@ cmake_minimum_required(VERSION 3.10.2)
 
 project("testjni")
 
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+#判断编译器类型，如果是gcc编译器，则在编译选项中加入C++11支持
+#if(CMAKE_COMPILER_IS_GUNCXX)
+#    set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+#    message(STATUS "optional:-std=c++11")
+#endif(CMAKE_COMPILER_IS_GUNCXX)
+#需要引入头文件，以这个配置的目录为基准
+#if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+#    add_subdirectory(./jni/arm64-v8a)
+#else("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+#    add_subdirectory(./jni/armeabi-v7a)
+#endif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+message("CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
+set(OPENCV_DIR ${CMAKE_SOURCE_DIR}/jni/arm64-v8a)
+
+add_library( opencv_java4 SHARED IMPORTED )
+set_target_properties(opencv_java4 PROPERTIES IMPORTED_LOCATION
+        ${OPENCV_DIR}/libopencv_java4.so)
+
+include_directories(./jni/include)
+
+#message($(CMAKE_SOURCE_DIR))
+
+#set(distribution_DIR ${CMAKE_SOUR}/../jni)
+#add_library(
+#        opencv_java4
+#        SHARED
+#        IMPORTED)
+#set_target_properties(
+#        opencv_java4
+#        PROPERTIES IMPORTED_LOCACTION
+#        ../jni/arm64-v8a/libopencv_java4.so)
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -29,20 +61,15 @@ add_library( # Sets the name of the library.
 # you want to add. CMake verifies that the library exists before
 # completing its build.
 
-find_library( # Sets the name of the path variable.
-              log-lib
-
-              # Specifies the name of the NDK library that
-              # you want CMake to locate.
-              log )
+find_library(log-lib log )
+find_library(jnigraphics-lib jnigraphics)
 
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-                       native-lib
-
+                       native-lib ${jnigraphics-lib} opencv_java4
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )

@@ -18,8 +18,12 @@
 #include <set>
 #include <map>
 #include <functional>
+//#include "../jni/opencv2/opencv.hpp"
+#include "opencv2/opencv.hpp"
+#include <android/bitmap.h>
 
 using namespace std;
+using namespace cv;
 
 #define TAG "JNI_TAG"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
@@ -354,6 +358,8 @@ public:
     }
 };
 
+
+
 void main2(){
 }
 
@@ -384,9 +390,6 @@ Java_com_example_testjni_Sample_exception(JNIEnv *env, jclass clazz) {
     main2();
 }
 
-
-
-
 extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_Sample_arraycopy(JNIEnv *env, jclass clazz, jobject src, jint src_pos, jobject dest, jint dest_pos, jint length) {
     //static_cast/interpret_cast 都可。
     jobjectArray src_array = static_cast<jobjectArray>(src);
@@ -401,4 +404,101 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_Sample_arraycopy(JNIE
         jobject obj = env->GetObjectArrayElement(src_array, i);
         env->SetObjectArrayElement(dst_array, i, obj);
     }
+}
+
+void bitmap2Mat(JNIEnv *pEnv, Mat &mat, jobject bitmap) {
+    //Mat 里面有个type：CV_8UC4--ARGB8888  CV_8UC2-RGB565
+    AndroidBitmapInfo info;
+    AndroidBitmap_getInfo(pEnv, bitmap, &info);
+
+    //锁定Bitmap画布
+    void* pixels;
+    AndroidBitmap_lockPixels(pEnv, bitmap, &pixels);
+
+    //指定mat的宽高和type BGRA
+    mat.create(info.height, info.width, CV_8UC4);
+    if(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888){
+        //CV_8UC4
+        Mat temp(info.height, info.width, CV_8UC4, pixels);
+        mat.create(info.height, info.width, CV_8UC4);
+        temp.copyTo(mat);
+    } else if(info.format == ANDROID_BITMAP_FORMAT_RGB_565){
+        Mat temp(info.height, info.width, CV_8UC2, pixels);
+        cvtColor(temp, mat, COLOR_BGR5652RGBA);
+    } else {
+        //others need to convert bitmap firstly
+    }
+
+    AndroidBitmap_unlockPixels(pEnv, bitmap);
+}
+
+
+void mat2Bitmap(JNIEnv *env, Mat mat, jobject &bitmap) {
+    AndroidBitmapInfo  info;
+    void *pixels;
+    AndroidBitmap_getInfo(env, bitmap, &info);
+
+    AndroidBitmap_lockPixels(env, bitmap, &pixels);
+    if(info.format == ANDROID_BITMAP_FORMAT_RGBA_8888){
+        Mat temp(info.height, info.width, CV_8UC4, pixels);
+        if(mat.type() == CV_8UC4){
+            mat.copyTo(temp);
+        } else if(mat.type() == CV_8UC2){
+            cvtColor(mat, temp, COLOR_BGR5652BGRA);
+        } else if(mat.type() == CV_8UC1){
+            cvtColor(mat, temp, COLOR_GRAY2RGBA);
+        }
+    } else if(info.format == ANDROID_BITMAP_FORMAT_RGB_565){
+        Mat temp(info.height, info.width, CV_8UC2, pixels);
+        if(mat.type() == CV_8UC2){
+            mat.copyTo(temp);
+        } else if(mat.type() == CV_8UC4){
+            cvtColor(mat, temp, COLOR_BGRA2RGB);
+        } else if(mat.type() == CV_8UC1){
+            cvtColor(mat, temp, COLOR_GRAY2BGR565);
+        }
+    }
+    AndroidBitmap_unlockPixels(env, bitmap);
+}
+
+CascadeClassifier cascadeClassifier;
+
+extern "C" JNIEXPORT jint JNICALL Java_com_example_testjni_FaceDetection_faceDectionSaveInfo(JNIEnv *env, jobject thiz, jobject bitmap) {
+    //检测人脸
+    Mat mat;
+    bitmap2Mat(env, mat, bitmap);
+    //处理灰度
+    Mat gray_mat;
+    cvtColor(mat, gray_mat, COLOR_BGRA2GRAY);
+
+    Mat equalize_mat;
+    //直方均衡补偿
+    equalizeHist(gray_mat, equalize_mat);
+    //识别人脸
+
+    std::vector<Rect> faces;
+    cascadeClassifier.detectMultiScale(equalize_mat, faces, 1, 1, 5);
+    LOGE("face count: %d", faces.size());
+    if(faces.size() == 1){
+        Rect faceRect = faces[0];
+
+        //在人脸部位画个图
+        rectangle(mat, faceRect, Scalar(255, 155, 155), 8);
+
+        //保存人脸信息Mat，图片jpg
+        Mat face_info_mat(equalize_mat, faceRect);
+    }
+    //把mat放入bitmap
+    mat2Bitmap(env, mat, bitmap);
+    //保存人脸信息
+    return 0;
+}
+
+
+//加载人脸识别分类器文件
+extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_FaceDetection_loadCascade(JNIEnv *env, jobject thiz, jstring file_path) {
+    const char* filePath = env->GetStringUTFChars(file_path, 0);
+    cascadeClassifier.load(filePath);
+    LOGE("load cascadeClassifier success");
+    env->ReleaseStringUTFChars(file_path, filePath);
 }

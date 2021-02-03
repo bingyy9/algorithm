@@ -8,19 +8,25 @@ import io.reactivex.rxjava3.functions.Function;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.tbruyelle.rxpermissions3.RxPermissions;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,6 +34,11 @@ public class MainActivity extends AppCompatActivity {
 
     private File mInFile = new File(Environment.getExternalStorageState(), "test.mp4");
     private File mOutFile = new File(Environment.getExternalStorageState(), "out.mp4");
+
+    private ImageView mFaceImg;
+    private Bitmap mFaceBitmap;
+    private FaceDetection mFaceDetection;
+    private File mCascadeFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +53,11 @@ public class MainActivity extends AppCompatActivity {
         }
         Signature[] signatures = packageInfo.signatures;
         Log.e(TAG, "signature: " + signatures[0].toCharsString());
+
+        mFaceImg = findViewById(R.id.img_face);
+        mFaceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.face);
+        mFaceImg.setImageBitmap(mFaceBitmap);
+        mFaceDetection = new FaceDetection();
 
         // Example of a call to a native method
         TextView tv = findViewById(R.id.sample_text);
@@ -160,4 +176,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void faceDetection(View view) {
+        copyCascadeFile();
+        mFaceDetection.loadCascade(mCascadeFile.getAbsolutePath());
+        mFaceDetection.faceDectionSaveInfo(mFaceBitmap);
+
+    }
+
+    private void copyCascadeFile(){
+        try{
+            InputStream is = getResources().openRawResource(R.raw.lbpcascade_frontalface);
+            File cascadeDir = getDir("cascade", Context.MODE_PRIVATE);
+            mCascadeFile = new File(cascadeDir, "lbpcascade_frontalface.xml");
+            if(mCascadeFile.exists()){
+                return;
+            }
+            FileOutputStream os = new FileOutputStream(mCascadeFile);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while((bytesRead = is.read(buffer)) != -1){
+                os.write(buffer, 0, bytesRead);
+            }
+            is.close();
+            os.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
