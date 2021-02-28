@@ -21,13 +21,26 @@
 //#include "../jni/opencv2/opencv.hpp"
 #include "opencv2/opencv.hpp"
 #include <android/bitmap.h>
+#include "BitmapMatUtil.h"
+#include "cardocr.h"
+#include "LinkedList.hpp"
+#include "SortUtils.h"
+#include "ArrayUtil.cpp"
+#include <thread>
+#include <mutex>
+#include <future>
+#include "ArrayStack.hpp"
+#include "ArrayQueue.hpp"
+#include "TreeNode.hpp"
+#include "PriorityQueue.hpp"
+#include "BSTree.hpp"
+#include "AVLTree.hpp"
 
 using namespace std;
 using namespace cv;
 
 #define TAG "JNI_TAG"
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
-
 using namespace std;
 
 //extern "C" JNIEXPORT jstring JNICALL
@@ -358,11 +371,115 @@ public:
     }
 };
 
+void hannuota(int n, char start, char help, char end){
+    if(n == 1){
+        LOGE("%d from %c move to %c", n, start, end);
+        return;
+    }
 
-
-void main2(){
+    hannuota(n-1, start, end, help);
+    LOGE("%d from %c move to %c", n, start, end);
+    hannuota(n-1, help, start, end);
 }
 
+void AVLTreeTest(){
+    LOGE("AVLTreeTest--------");
+    AVLTree<int, int> *avlTree = new AVLTree<int, int>();
+    avlTree->put2(3,3);
+    avlTree->put2(2,2);
+    avlTree->put2(1,1);
+    avlTree->put2(4,4);
+    avlTree->put2(5,5);
+    avlTree->put2(6,6);
+    avlTree->put2(7,7);
+    avlTree->put2(10,10);
+    avlTree->put2(9,9);
+    avlTree->put2(8,8);
+
+    avlTree->layer_traverse();
+
+    LOGE("AVLTree remove node rotation test:");
+    avlTree->remove(4);
+    avlTree->layer_traverse();
+    avlTree->remove(5);
+    avlTree->layer_traverse();
+    avlTree->remove(2);
+    avlTree->layer_traverse();
+}
+
+void main4(){
+    BSTree<int, int> *bsTree = new BSTree<int, int>();
+    //(2, -11, -13, 0, 3, 8, 7)
+//    bsTree->put2(2, 2);
+//    bsTree->put2(-11, -11);
+//    bsTree->put2(-13, -13);
+//    bsTree->put2(0, 0);
+//    bsTree->put2(3, 3);
+//    bsTree->put2(8, 8);
+//    bsTree->put2(7, 7);
+    bsTree->put(2, 2);
+    bsTree->put(-11, -11);
+    bsTree->put(-13, -13);
+    bsTree->put(0, 0);
+    bsTree->put(3, 3);
+    bsTree->put(8, 8);
+    bsTree->put(7, 7);
+
+    LOGE("in_order_traverse BSTree");
+    bsTree->in_order_traverse(bsTree->root);
+
+//    bsTree->remove(2);
+    LOGE("in_order_traverse BSTree");
+    bsTree->in_order_traverse(bsTree->root);
+
+    AVLTreeTest();
+}
+
+void main3(){
+    TreeNode<char>* A = new TreeNode<char>('A');
+    TreeNode<char>* B = new TreeNode<char>('B');
+    TreeNode<char>* C = new TreeNode<char>('C');
+    TreeNode<char>* D = new TreeNode<char>('D');
+    TreeNode<char>* E = new TreeNode<char>('E');
+    TreeNode<char>* F = new TreeNode<char>('F');
+    TreeNode<char>* G = new TreeNode<char>('G');
+    A->left = B;
+    A->right = C;
+    B->left = D;
+    B->right = E;
+    C->right = F;
+    F->left = G;
+
+    string str;
+    TreeNode<char>::pre_order_traverse(A);
+    TreeNode<char>::serialize_tree(A, &str);
+    char* ch = const_cast<char *>(str.c_str());
+    TreeNode<char>* node = TreeNode<char>::deserialize_tree(&ch);
+    LOGE("serialize_tree %s", str.c_str());
+    TreeNode<char>::pre_order_traverse(node);
+
+    main4();
+}
+
+
+void main4_sort(){
+    int len = 10;
+    int *arr = SortUtils::create_random_array(len, 20, 100);
+    int *arr2 = SortUtils::copy_rand_array(arr, len);
+
+    LOGE("9 >> 1 %d ", 9>>1);
+    SortUtils::sort_array("bubbleSort", SortUtils::quick_sort, arr, len);
+//    SortUtils::sort_array("selectSort", SortUtils::selectSort, arr2, len);
+    SortUtils::print_array(arr, len);
+//    SortUtils::bubbleSort(arr, 6);
+//    for(int i = 0; i<len; i++){
+//        LOGE("%d", arr[i]);
+//    }
+    delete[] (arr);
+    delete[] (arr2);
+
+    main3();
+}
 
 extern "C"
 JNIEXPORT void JNICALL
@@ -387,7 +504,8 @@ Java_com_example_testjni_Sample_exception(JNIEnv *env, jclass clazz) {
     jstring name = env->NewStringUTF("test");
     env->SetStaticObjectField(clazz, jfieldId, name);
 
-    main2();
+
+    main4_sort();
 }
 
 extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_Sample_arraycopy(JNIEnv *env, jclass clazz, jobject src, jint src_pos, jobject dest, jint dest_pos, jint length) {
@@ -501,4 +619,26 @@ extern "C" JNIEXPORT void JNICALL Java_com_example_testjni_FaceDetection_loadCas
     cascadeClassifier.load(filePath);
     LOGE("load cascadeClassifier success");
     env->ReleaseStringUTFChars(file_path, filePath);
+}
+
+extern "C" JNIEXPORT jstring JNICALL Java_com_example_testjni_BankCardOCR_cardOcr(JNIEnv *env, jclass clazz, jobject bitmap) {
+    Mat mat;
+    int res = BitmapMatUtil::bitmap2mat(env, bitmap, mat);
+    LOGE(" %d, %d, %d, %d", mat.cols, mat.rows, mat.type(), CV_8UC4);
+    //截取银行卡区域
+    Rect card_rect;
+    co1::find_card_area(mat, card_rect);
+    Mat card_mat(mat, card_rect);
+
+    //截取卡号区域
+    Rect card_number_rect;
+    co1::find_card_number_area(card_mat, card_number_rect);
+    Mat card_number_mat(card_mat, card_number_rect);
+
+    //获取数字
+    vector<Mat> numbers;
+    co1::find_card_numbers(card_number_mat, numbers);
+
+    mat2Bitmap(env, card_number_mat, bitmap);
+    return env->NewStringUTF("fda");
 }

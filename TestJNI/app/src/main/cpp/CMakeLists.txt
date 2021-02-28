@@ -21,14 +21,19 @@ project("testjni")
 #else("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
 #    add_subdirectory(./jni/armeabi-v7a)
 #endif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-message("CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
-set(OPENCV_DIR ${CMAKE_SOURCE_DIR}/jni/arm64-v8a)
 
+
+#message("CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
+if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+    set(OPENCV_DIR ${CMAKE_SOURCE_DIR}/jni/arm64-v8a)
+else("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
+    set(OPENCV_DIR ${CMAKE_SOURCE_DIR}/jni/armeabi-v7a)
+endif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
 add_library( opencv_java4 SHARED IMPORTED )
 set_target_properties(opencv_java4 PROPERTIES IMPORTED_LOCATION
         ${OPENCV_DIR}/libopencv_java4.so)
 
-include_directories(./jni/include)
+include_directories(${CMAKE_SOURCE_DIR}/jni/include)
 
 #message($(CMAKE_SOURCE_DIR))
 
@@ -53,7 +58,10 @@ add_library( # Sets the name of the library.
              SHARED
 
              # Provides a relative path to your source file(s).
-             native-lib.cpp md5.cpp Student.cpp Teacher.cpp ArrayList.cpp ArrayList.hpp)
+             native-lib.cpp md5.cpp Student.cpp Teacher.cpp ArrayList.cpp ArrayList.hpp BitmapMatUtil.cpp cardocr.cpp
+             LinkedList.hpp SortUtils.cpp RandomUtil.cpp ArrayUtil.cpp ArrayStack.hpp LinkStack.hpp ArrayStack.hpp
+            TreeNode.hpp PriorityQueue.hpp BSTree.hpp AVLTree.hpp
+        )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

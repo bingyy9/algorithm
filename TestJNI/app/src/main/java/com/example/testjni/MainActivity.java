@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -19,6 +20,7 @@ import android.os.Environment;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,16 +29,21 @@ import com.tbruyelle.rxpermissions3.RxPermissions;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    static boolean toggleFaceDetection = false;
+    static boolean toggleBankCardDetection = true;
 
     public static final String TAG = "MainActivity";
 
     private File mInFile = new File(Environment.getExternalStorageState(), "test.mp4");
     private File mOutFile = new File(Environment.getExternalStorageState(), "out.mp4");
 
-    private ImageView mFaceImg;
-    private Bitmap mFaceBitmap;
+    private ImageView mImg;
+    private Bitmap mFaceBitmap, mBankCardBitmap;
     private FaceDetection mFaceDetection;
     private File mCascadeFile;
 
@@ -54,9 +61,18 @@ public class MainActivity extends AppCompatActivity {
         Signature[] signatures = packageInfo.signatures;
         Log.e(TAG, "signature: " + signatures[0].toCharsString());
 
-        mFaceImg = findViewById(R.id.img_face);
+        Button btn = findViewById(R.id.btn_faceDetection);
+        mImg = findViewById(R.id.img_face);
         mFaceBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.face);
-        mFaceImg.setImageBitmap(mFaceBitmap);
+        mBankCardBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bankcard);
+        if(toggleBankCardDetection){
+            btn.setText("BankCardDetection");
+            mImg.setImageBitmap(mBankCardBitmap);
+        } else if(toggleFaceDetection){
+            btn.setText("FaceDetection");
+            mImg.setImageBitmap(mFaceBitmap);
+        }
+
         mFaceDetection = new FaceDetection();
 
         // Example of a call to a native method
@@ -177,9 +193,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void faceDetection(View view) {
-        copyCascadeFile();
-        mFaceDetection.loadCascade(mCascadeFile.getAbsolutePath());
-        mFaceDetection.faceDectionSaveInfo(mFaceBitmap);
+        if(toggleFaceDetection) {
+            copyCascadeFile();
+            mFaceDetection.loadCascade(mCascadeFile.getAbsolutePath());
+            mFaceDetection.faceDectionSaveInfo(mFaceBitmap);
+        } else if(toggleBankCardDetection){
+            BankCardOCR bankCardOCR = new BankCardOCR();
+            String str = bankCardOCR.cardOcr(mBankCardBitmap);
+            Log.e(TAG, "card number is: " + str);
+        }
 
     }
 
@@ -203,5 +225,22 @@ public class MainActivity extends AppCompatActivity {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private static List<String> mNeedLoginClassNames = new ArrayList<>();
+
+    static {
+        mNeedLoginClassNames.add(MainActivity.class.getName());
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if(mNeedLoginClassNames.contains(intent.getClass().getName())){
+            //login activity
+            return;
+        } else {
+            //do action
+        }
+        super.startActivityForResult(intent, requestCode);
     }
 }
