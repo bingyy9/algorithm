@@ -239,7 +239,7 @@ public:
     */
     void unmapHost();
 
-    //! map to device memory (blocking)
+    //! map2 to device memory (blocking)
     cuda::GpuMat mapDevice();
     void unmapDevice();
 

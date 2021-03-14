@@ -118,7 +118,7 @@ enum
     CV_CAP_PROP_SUPPORTED_PREVIEW_SIZES_STRING=1025, // readonly, tricky property, returns cpnst char* indeed
     CV_CAP_PROP_PREVIEW_FORMAT=1026, // readonly, tricky property, returns cpnst char* indeed
 
-    // OpenNI map generators
+    // OpenNI map2 generators
     CV_CAP_OPENNI_DEPTH_GENERATOR = 1 << 31,
     CV_CAP_OPENNI_IMAGE_GENERATOR = 1 << 30,
     CV_CAP_OPENNI_IR_GENERATOR    = 1 << 29,
@@ -130,7 +130,7 @@ enum
     CV_CAP_PROP_OPENNI_BASELINE        = 102, // in mm
     CV_CAP_PROP_OPENNI_FOCAL_LENGTH    = 103, // in pixels
     CV_CAP_PROP_OPENNI_REGISTRATION    = 104, // flag
-    CV_CAP_PROP_OPENNI_REGISTRATION_ON = CV_CAP_PROP_OPENNI_REGISTRATION, // flag that synchronizes the remapping depth map to image map
+    CV_CAP_PROP_OPENNI_REGISTRATION_ON = CV_CAP_PROP_OPENNI_REGISTRATION, // flag that synchronizes the remapping depth map2 to image map2
                                                                           // by changing depth generator's view point (if the flag is "on") or
                                                                           // sets this view point to its normal one (if the flag is "off").
     CV_CAP_PROP_OPENNI_APPROX_FRAME_SYNC = 105,

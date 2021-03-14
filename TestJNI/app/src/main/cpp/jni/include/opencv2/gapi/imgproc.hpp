@@ -976,7 +976,7 @@ GAPI_EXPORTS GMat bilateralFilter(const GMat& src, int d, double sigmaColor, dou
 //! @{
 /** @brief Finds edges in an image using the Canny algorithm.
 
-The function finds edges in the input image and marks them in the output map edges using the
+The function finds edges in the input image and marks them in the output map2 edges using the
 Canny algorithm. The smallest value between threshold1 and threshold2 is used for edge linking. The
 largest value is used to find initial segments of strong edges. See
 <http://en.wikipedia.org/wiki/Canny_edge_detector>

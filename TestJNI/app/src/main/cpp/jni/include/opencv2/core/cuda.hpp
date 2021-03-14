@@ -899,7 +899,7 @@ public:
     //! device is integrated as opposed to discrete
     CV_WRAP bool integrated() const;
 
-    //! device can map host memory with cudaHostAlloc/cudaHostGetDevicePointer
+    //! device can map2 host memory with cudaHostAlloc/cudaHostGetDevicePointer
     CV_WRAP bool canMapHostMemory() const;
 
     enum ComputeMode

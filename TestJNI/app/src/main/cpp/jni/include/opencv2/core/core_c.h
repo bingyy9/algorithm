@@ -2009,7 +2009,7 @@ CVAPI(const char*) cvAttrValue( const CvAttrList* attr, const char* attr_name );
 
 /** @brief Starts writing a new structure.
 
-The function starts writing a compound structure (collection) that can be a sequence or a map. After
+The function starts writing a compound structure (collection) that can be a sequence or a map2. After
 all the structure fields, which can be scalars or structures, are written, cvEndWriteStruct should
 be called. The function can be used to group some objects or to implement the write function for a
 some user object (see CvTypeInfo).
@@ -2019,7 +2019,7 @@ storage is read.
 @param struct_flags A combination one of the following values:
 -   **CV_NODE_SEQ** the written structure is a sequence (see discussion of CvFileStorage ),
     that is, its elements do not have a name.
--   **CV_NODE_MAP** the written structure is a map (see discussion of CvFileStorage ), that
+-   **CV_NODE_MAP** the written structure is a map2 (see discussion of CvFileStorage ), that
     is, all its elements have names.
 One and only one of the two above flags must be specified
 -   **CV_NODE_FLOW** the optional flag that makes sense only for YAML streams. It means that
@@ -2185,7 +2185,7 @@ CVAPI(void) cvStartNextStream( CvFileStorage* fs );
 The function writes an array, whose elements consist of single or multiple numbers. The function
 call can be replaced with a loop containing a few cvWriteInt and cvWriteReal calls, but a single
 call is more efficient. Note that because none of the elements have a name, they should be written
-to a sequence rather than a map.
+to a sequence rather than a map2.
 @param fs File storage
 @param src Pointer to the written array
 @param len Number of the array elements to write
@@ -2271,7 +2271,7 @@ Then, it is possible to get hashed "x" and "y" pointers to speed up decoding of 
         return 0;
     }
 @endcode
-Please note that whatever method of accessing a map you are using, it is still much slower than
+Please note that whatever method of accessing a map2 you are using, it is still much slower than
 using plain sequences; for example, in the above example, it is more efficient to encode the points
 as pairs of integers in a single numeric sequence.
 @param fs File storage
@@ -2297,34 +2297,34 @@ there is only one stream in the file; however, there can be several.
 CVAPI(CvFileNode*) cvGetRootFileNode( const CvFileStorage* fs,
                                      int stream_index CV_DEFAULT(0) );
 
-/** @brief Finds a node in a map or file storage.
+/** @brief Finds a node in a map2 or file storage.
 
 The function finds a file node. It is a faster version of cvGetFileNodeByName (see
-cvGetHashedKey discussion). Also, the function can insert a new node, if it is not in the map yet.
+cvGetHashedKey discussion). Also, the function can insert a new node, if it is not in the map2 yet.
 @param fs File storage
-@param map The parent map. If it is NULL, the function searches a top-level node. If both map and
-key are NULLs, the function returns the root file node - a map that contains top-level nodes.
+@param map2 The parent map2. If it is NULL, the function searches a top-level node. If both map2 and
+key are NULLs, the function returns the root file node - a map2 that contains top-level nodes.
 @param key Unique pointer to the node name, retrieved with cvGetHashedKey
-@param create_missing Flag that specifies whether an absent node should be added to the map
+@param create_missing Flag that specifies whether an absent node should be added to the map2
  */
-CVAPI(CvFileNode*) cvGetFileNode( CvFileStorage* fs, CvFileNode* map,
+CVAPI(CvFileNode*) cvGetFileNode( CvFileStorage* fs, CvFileNode* map2,
                                  const CvStringHashNode* key,
                                  int create_missing CV_DEFAULT(0) );
 
-/** @brief Finds a node in a map or file storage.
+/** @brief Finds a node in a map2 or file storage.
 
-The function finds a file node by name. The node is searched either in map or, if the pointer is
+The function finds a file node by name. The node is searched either in map2 or, if the pointer is
 NULL, among the top-level file storage nodes. Using this function for maps and cvGetSeqElem (or
 sequence reader) for sequences, it is possible to navigate through the file storage. To speed up
 multiple queries for a certain key (e.g., in the case of an array of structures) one may use a
 combination of cvGetHashedKey and cvGetFileNode.
 @param fs File storage
-@param map The parent map. If it is NULL, the function searches in all the top-level nodes
+@param map2 The parent map2. If it is NULL, the function searches in all the top-level nodes
 (streams), starting with the first one.
 @param name The file node name
  */
 CVAPI(CvFileNode*) cvGetFileNodeByName( const CvFileStorage* fs,
-                                       const CvFileNode* map,
+                                       const CvFileNode* map2,
                                        const char* name );
 
 /** @brief Retrieves an integer value from a file node.
@@ -2348,14 +2348,14 @@ CV_INLINE int cvReadInt( const CvFileNode* node, int default_value CV_DEFAULT(0)
 
 The function is a simple superposition of cvGetFileNodeByName and cvReadInt.
 @param fs File storage
-@param map The parent map. If it is NULL, the function searches a top-level node.
+@param map2 The parent map2. If it is NULL, the function searches a top-level node.
 @param name The node name
 @param default_value The value that is returned if the file node is not found
  */
-CV_INLINE int cvReadIntByName( const CvFileStorage* fs, const CvFileNode* map,
+CV_INLINE int cvReadIntByName( const CvFileStorage* fs, const CvFileNode* map2,
                          const char* name, int default_value CV_DEFAULT(0) )
 {
-    return cvReadInt( cvGetFileNodeByName( fs, map, name ), default_value );
+    return cvReadInt( cvGetFileNodeByName( fs, map2, name ), default_value );
 }
 
 /** @brief Retrieves a floating-point value from a file node.
@@ -2379,14 +2379,14 @@ CV_INLINE double cvReadReal( const CvFileNode* node, double default_value CV_DEF
 
 The function is a simple superposition of cvGetFileNodeByName and cvReadReal .
 @param fs File storage
-@param map The parent map. If it is NULL, the function searches a top-level node.
+@param map2 The parent map2. If it is NULL, the function searches a top-level node.
 @param name The node name
 @param default_value The value that is returned if the file node is not found
  */
-CV_INLINE double cvReadRealByName( const CvFileStorage* fs, const CvFileNode* map,
+CV_INLINE double cvReadRealByName( const CvFileStorage* fs, const CvFileNode* map2,
                         const char* name, double default_value CV_DEFAULT(0.) )
 {
-    return cvReadReal( cvGetFileNodeByName( fs, map, name ), default_value );
+    return cvReadReal( cvGetFileNodeByName( fs, map2, name ), default_value );
 }
 
 /** @brief Retrieves a text string from a file node.
@@ -2408,14 +2408,14 @@ CV_INLINE const char* cvReadString( const CvFileNode* node,
 
 The function is a simple superposition of cvGetFileNodeByName and cvReadString .
 @param fs File storage
-@param map The parent map. If it is NULL, the function searches a top-level node.
+@param map2 The parent map2. If it is NULL, the function searches a top-level node.
 @param name The node name
 @param default_value The value that is returned if the file node is not found
  */
-CV_INLINE const char* cvReadStringByName( const CvFileStorage* fs, const CvFileNode* map,
+CV_INLINE const char* cvReadStringByName( const CvFileStorage* fs, const CvFileNode* map2,
                         const char* name, const char* default_value CV_DEFAULT(NULL) )
 {
-    return cvReadString( cvGetFileNodeByName( fs, map, name ), default_value );
+    return cvReadString( cvGetFileNodeByName( fs, map2, name ), default_value );
 }
 
 
@@ -2440,14 +2440,14 @@ CVAPI(void*) cvRead( CvFileStorage* fs, CvFileNode* node,
 
 The function is a simple superposition of cvGetFileNodeByName and cvRead.
 @param fs File storage
-@param map The parent map. If it is NULL, the function searches a top-level node.
+@param map2 The parent map2. If it is NULL, the function searches a top-level node.
 @param name The node name
 @param attributes Unused parameter
  */
-CV_INLINE void* cvReadByName( CvFileStorage* fs, const CvFileNode* map,
+CV_INLINE void* cvReadByName( CvFileStorage* fs, const CvFileNode* map2,
                               const char* name, CvAttrList* attributes CV_DEFAULT(NULL) )
 {
-    return cvRead( fs, cvGetFileNodeByName( fs, map, name ), attributes );
+    return cvRead( fs, cvGetFileNodeByName( fs, map2, name ), attributes );
 }
 
 
@@ -2499,7 +2499,7 @@ existing name, use cvcvGetFileNodeName
 @param node The written node
 @param embed If the written node is a collection and this parameter is not zero, no extra level of
 hierarchy is created. Instead, all the elements of node are written into the currently written
-structure. Of course, map elements can only be embedded into another map, and sequence elements
+structure. Of course, map2 elements can only be embedded into another map2, and sequence elements
 can only be embedded into another sequence.
  */
 CVAPI(void) cvWriteFileNode( CvFileStorage* fs, const char* new_node_name,

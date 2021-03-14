@@ -86,8 +86,8 @@ namespace cv {
         @param src_size Source image size
         @param K Camera intrinsic parameters
         @param R Camera rotation matrix
-        @param xmap Projection map for the x axis
-        @param ymap Projection map for the y axis
+        @param xmap Projection map2 for the x axis
+        @param ymap Projection map2 for the y axis
         @return Projected image minimum bounding box
         */
         CV_WRAP Rect buildMaps(Size src_size, InputArray K, InputArray R, OutputArray xmap, OutputArray ymap);

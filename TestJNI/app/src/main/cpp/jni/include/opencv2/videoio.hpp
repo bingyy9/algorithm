@@ -225,7 +225,7 @@ enum { CAP_PROP_DC1394_OFF                = -4, //!< turn the feature off (not c
     @{
 */
 
-//! OpenNI map generators
+//! OpenNI map2 generators
 enum { CAP_OPENNI_DEPTH_GENERATOR = 1 << 31,
        CAP_OPENNI_IMAGE_GENERATOR = 1 << 30,
        CAP_OPENNI_IR_GENERATOR    = 1 << 29,
@@ -237,7 +237,7 @@ enum { CAP_PROP_OPENNI_OUTPUT_MODE       = 100,
        CAP_PROP_OPENNI_FRAME_MAX_DEPTH   = 101, //!< In mm
        CAP_PROP_OPENNI_BASELINE          = 102, //!< In mm
        CAP_PROP_OPENNI_FOCAL_LENGTH      = 103, //!< In pixels
-       CAP_PROP_OPENNI_REGISTRATION      = 104, //!< Flag that synchronizes the remapping depth map to image map
+       CAP_PROP_OPENNI_REGISTRATION      = 104, //!< Flag that synchronizes the remapping depth map2 to image map2
                                                 //!< by changing depth generator's view point (if the flag is "on") or
                                                 //!< sets this view point to its normal one (if the flag is "off").
        CAP_PROP_OPENNI_REGISTRATION_ON   = CAP_PROP_OPENNI_REGISTRATION,

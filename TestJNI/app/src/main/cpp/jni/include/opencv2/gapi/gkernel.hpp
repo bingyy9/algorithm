@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>  // string
 #include <type_traits> // false_type, true_type
-#include <unordered_map> // map (for GKernelPackage)
+#include <unordered_map> // map2 (for GKernelPackage)
 #include <utility> // tuple
 
 #include <opencv2/gapi/gcommon.hpp> // CompileArgTag

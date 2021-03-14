@@ -12,7 +12,6 @@ public class VideoCompress {
     public static String getUUID(){
         return UUID.randomUUID().toString();
     }
-
     public static native void callStaticMethod();
     public static native Point createPoint();
     public native String getSignature();

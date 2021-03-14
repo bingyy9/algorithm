@@ -92,8 +92,8 @@ public:
     @param src_size Source image size
     @param K Camera intrinsic parameters
     @param R Camera rotation matrix
-    @param xmap Projection map for the x axis
-    @param ymap Projection map for the y axis
+    @param xmap Projection map2 for the x axis
+    @param ymap Projection map2 for the y axis
     @return Projected image minimum bounding box
      */
     virtual Rect buildMaps(Size src_size, InputArray K, InputArray R, OutputArray xmap, OutputArray ymap) = 0;
@@ -264,8 +264,8 @@ public:
     @param src_size Source image size
     @param K Camera intrinsic parameters
     @param H Camera extrinsic parameters
-    @param xmap Projection map for the x axis
-    @param ymap Projection map for the y axis
+    @param xmap Projection map2 for the x axis
+    @param ymap Projection map2 for the y axis
     @return Projected image minimum bounding box
      */
     Rect buildMaps(Size src_size, InputArray K, InputArray H, OutputArray xmap, OutputArray ymap) CV_OVERRIDE;

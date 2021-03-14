@@ -1579,7 +1579,7 @@ GAPI_EXPORTS_W std::tuple<GMat, GMat, GMat> split3(const GMat& src);
 
 /** @brief Applies a generic geometrical transformation to an image.
 
-The function remap transforms the source image using the specified map:
+The function remap transforms the source image using the specified map2:
 
 \f[\texttt{dst} (x,y) =  \texttt{src} (map_x(x,y),map_y(x,y))\f]
 
@@ -1587,7 +1587,7 @@ where values of pixels with non-integer coordinates are computed using one of av
 interpolation methods. \f$map_x\f$ and \f$map_y\f$ can be encoded as separate floating-point maps
 in \f$map_1\f$ and \f$map_2\f$ respectively, or interleaved floating-point maps of \f$(x,y)\f$ in
 \f$map_1\f$, or fixed-point maps created by using convertMaps. The reason you might want to
-convert from floating to fixed-point representations of a map is that they can yield much faster
+convert from floating to fixed-point representations of a map2 is that they can yield much faster
 (\~2x) remapping operations. In the converted case, \f$map_1\f$ contains pairs (cvFloor(x),
 cvFloor(y)) and \f$map_2\f$ contains indices in a table of interpolation coefficients.
 Output image must be of the same size and depth as input one.
@@ -1597,9 +1597,9 @@ Output image must be of the same size and depth as input one.
  - Due to current implementation limitations the size of an input and output images should be less than 32767x32767.
 
 @param src Source image.
-@param map1 The first map of either (x,y) points or just x values having the type CV_16SC2,
+@param map1 The first map2 of either (x,y) points or just x values having the type CV_16SC2,
 CV_32FC1, or CV_32FC2.
-@param map2 The second map of y values having the type CV_16UC1, CV_32FC1, or none (empty map
+@param map2 The second map2 of y values having the type CV_16UC1, CV_32FC1, or none (empty map2
 if map1 is (x,y) points), respectively.
 @param interpolation Interpolation method (see cv::InterpolationFlags). The methods #INTER_AREA
 and #INTER_LINEAR_EXACT are not supported by this function.

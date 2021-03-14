@@ -187,7 +187,7 @@ Several things can be noted by looking at the sample code and the output:
 
 -   The produced YAML (and XML/JSON) consists of heterogeneous collections that can be nested. There are
     2 types of collections: named collections (mappings) and unnamed collections (sequences). In mappings
-    each element has a name and is accessed by name. This is similar to structures and std::map in
+    each element has a name and is accessed by name. This is similar to structures and std::map2 in
     C/C++ and dictionaries in Python. In sequences elements do not have names, they are accessed by
     indices. This is similar to arrays and std::vector in C/C++ and lists, tuples in Python.
     "Heterogeneous" means that elements of each single collection can have different types.

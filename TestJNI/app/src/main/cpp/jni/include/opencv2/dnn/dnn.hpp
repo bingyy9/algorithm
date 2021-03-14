@@ -1535,7 +1535,7 @@ public:
  * For more information about the hyper-parameters setting, please refer to https://github.com/MhLiao/DB
  *
  * Configurable parameters:
- * - (float) binaryThreshold - The threshold of the binary map. It is usually set to 0.3.
+ * - (float) binaryThreshold - The threshold of the binary map2. It is usually set to 0.3.
  * - (float) polygonThreshold - The threshold of text polygons. It is usually set to 0.5, 0.6, and 0.7. Default is 0.5f
  * - (double) unclipRatio - The unclip ratio of the detected text region, which determines the output size. It is usually set to 2.0.
  * - (int) maxCandidates - The max number of the output results.

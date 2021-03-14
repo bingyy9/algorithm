@@ -9,19 +9,18 @@ cmake_minimum_required(VERSION 3.10.2)
 
 project("testjni")
 
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 #判断编译器类型，如果是gcc编译器，则在编译选项中加入C++11支持
-#if(CMAKE_COMPILER_IS_GUNCXX)
-#    set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
-#    message(STATUS "optional:-std=c++11")
-#endif(CMAKE_COMPILER_IS_GUNCXX)
+if(CMAKE_COMPILER_IS_GUNCXX)
+    set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+    message(STATUS "optional:-std=c++11")
+endif(CMAKE_COMPILER_IS_GUNCXX)
 #需要引入头文件，以这个配置的目录为基准
 #if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
 #    add_subdirectory(./jni/arm64-v8a)
 #else("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
 #    add_subdirectory(./jni/armeabi-v7a)
 #endif("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
-
 
 #message("CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR}")
 if("${CMAKE_SIZEOF_VOID_P}" EQUAL "8")
@@ -51,17 +50,21 @@ include_directories(${CMAKE_SOURCE_DIR}/jni/include)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-add_library( # Sets the name of the library.
-             native-lib
+FILE(GLOB SRC_LIST_CPP "${CMAKE_SOURCE_DIR}/*.cpp")
+FILE(GLOB SRC_LIST_HPP "${CMAKE_SOURCE_DIR}/*.hpp")
+add_library(native-lib SHARED ${SRC_LIST_CPP} ${SRC_LIST_HPP})
 
-             # Sets the library as a shared library.
-             SHARED
-
-             # Provides a relative path to your source file(s).
-             native-lib.cpp md5.cpp Student.cpp Teacher.cpp ArrayList.cpp ArrayList.hpp BitmapMatUtil.cpp cardocr.cpp
-             LinkedList.hpp SortUtils.cpp RandomUtil.cpp ArrayUtil.cpp ArrayStack.hpp LinkStack.hpp ArrayStack.hpp
-            TreeNode.hpp PriorityQueue.hpp BSTree.hpp AVLTree.hpp
-        )
+#add_library( # Sets the name of the library.
+#             native-lib
+#
+#             # Sets the library as a shared library.
+#             SHARED
+#
+#             # Provides a relative path to your source file(s).
+#             native-lib.cpp md5.cpp Student.cpp Teacher.cpp ArrayList.cpp ArrayList.hpp BitmapMatUtil.cpp cardocr.cpp
+#             LinkedList.hpp SortUtils.cpp RandomUtil.cpp ArrayUtil.cpp ArrayStack.hpp LinkStack.hpp ArrayStack.hpp
+#            TreeNode.hpp PriorityQueue.hpp BSTree.hpp AVLTree.hpp map2.hpp HuffmanTree.cpp pQueue.cpp LeeCode.cpp
+#        )
 
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by

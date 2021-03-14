@@ -313,7 +313,7 @@ namespace detail
 
     // Helper (FIXME: work-around?)
     // stripping G types to their host types
-    // like cv::GArray<GMat> would still map to std::vector<cv::Mat>
+    // like cv::GArray<GMat> would still map2 to std::vector<cv::Mat>
     // but not to std::vector<cv::GMat>
 #if defined(GAPI_STANDALONE)
 #  define FLATTEN_NS cv::gapi::own

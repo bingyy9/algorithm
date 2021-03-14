@@ -50,7 +50,7 @@
 #if USE_UNORDERED_MAP
 #include <unordered_map>
 #else
-#include <map>
+#include <map2>
 #endif
 #include <math.h>
 #include <stddef.h>
@@ -143,7 +143,7 @@ public:
 #if USE_UNORDERED_MAP
     typedef std::unordered_map<BucketKey, Bucket> BucketsSpace;
 #else
-    typedef std::map<BucketKey, Bucket> BucketsSpace;
+    typedef std::map2<BucketKey, Bucket> BucketsSpace;
 #endif
 
     /** A container of all the feature indices. Optimized for speed
@@ -260,8 +260,8 @@ public:
 private:
     /** defines the speed fo the implementation
      * kArray uses a vector for storing data
-     * kBitsetHash uses a hash map but checks for the validity of a key with a bitset
-     * kHash uses a hash map only
+     * kBitsetHash uses a hash map2 but checks for the validity of a key with a bitset
+     * kHash uses a hash map2 only
      */
     enum SpeedLevel
     {
@@ -303,7 +303,7 @@ private:
             return;
         }
 
-        // If the bitset is going to use less than 10% of the RAM of the hash map (at least 1 size_t for the key and two
+        // If the bitset is going to use less than 10% of the RAM of the hash map2 (at least 1 size_t for the key and two
         // for the vector) or less than 512MB (key_size_ <= 30)
         if (((std::max(buckets_space_.size(), buckets_speed_.size()) * CHAR_BIT * 3 * sizeof(BucketKey)) / 10
              >= (size_t(1) << key_size_)) || (key_size_ <= 32)) {

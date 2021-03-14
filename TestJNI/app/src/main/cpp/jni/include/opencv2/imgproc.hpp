@@ -86,7 +86,7 @@ CV_64F                    | -1/CV_64F
     @defgroup imgproc_transform Geometric Image Transformations
 
 The functions in this section perform various geometrical transformations of 2D images. They do not
-change the image content but deform the pixel grid and map this deformed grid to the destination
+change the image content but deform the pixel grid and map2 this deformed grid to the destination
 image. In fact, to avoid sampling artifacts, the mapping is done in the reverse order, from
 destination to the source. That is, for each pixel \f$(x, y)\f$ of the destination image, the
 functions compute coordinates of the corresponding "donor" pixel in the source image and copy the
@@ -1766,13 +1766,13 @@ Check @ref tutorial_canny_detector "the corresponding tutorial" for more details
 
 /** @brief Finds edges in an image using the Canny algorithm @cite Canny86 .
 
-The function finds edges in the input image and marks them in the output map edges using the
+The function finds edges in the input image and marks them in the output map2 edges using the
 Canny algorithm. The smallest value between threshold1 and threshold2 is used for edge linking. The
 largest value is used to find initial segments of strong edges. See
 <http://en.wikipedia.org/wiki/Canny_edge_detector>
 
 @param image 8-bit input image.
-@param edges output edge map; single channels 8-bit image, which has the same size as image .
+@param edges output edge map2; single channels 8-bit image, which has the same size as image .
 @param threshold1 first threshold for the hysteresis procedure.
 @param threshold2 second threshold for the hysteresis procedure.
 @param apertureSize aperture size for the Sobel operator.
@@ -1791,7 +1791,7 @@ Finds edges in an image using the Canny algorithm with custom image gradient.
 
 @param dx 16-bit x derivative of input image (CV_16SC1 or CV_16SC3).
 @param dy 16-bit y derivative of input image (same type as dx).
-@param edges output edge map; single channels 8-bit image, which has the same size as image .
+@param edges output edge map2; single channels 8-bit image, which has the same size as image .
 @param threshold1 first threshold for the hysteresis procedure.
 @param threshold2 second threshold for the hysteresis procedure.
 @param L2gradient a flag, indicating whether a more accurate \f$L_2\f$ norm
@@ -1830,7 +1830,7 @@ computes the following characteristic:
 
 \f[\texttt{dst} (x,y) =  \mathrm{det} M^{(x,y)} - k  \cdot \left ( \mathrm{tr} M^{(x,y)} \right )^2\f]
 
-Corners in the image can be found as the local maxima of this response map.
+Corners in the image can be found as the local maxima of this response map2.
 
 @param src Input single-channel 8-bit or floating-point image.
 @param dst Image to store the Harris detector responses. It has the type CV_32FC1 and the same
@@ -1874,7 +1874,7 @@ CV_EXPORTS_W void cornerEigenValsAndVecs( InputArray src, OutputArray dst,
                                           int blockSize, int ksize,
                                           int borderType = BORDER_DEFAULT );
 
-/** @brief Calculates a feature map for corner detection.
+/** @brief Calculates a feature map2 for corner detection.
 
 The function calculates the complex spatial derivative-based function of the source image
 
@@ -2346,7 +2346,7 @@ CV_EXPORTS_W void warpPerspective( InputArray src, OutputArray dst,
 
 /** @brief Applies a generic geometrical transformation to an image.
 
-The function remap transforms the source image using the specified map:
+The function remap transforms the source image using the specified map2:
 
 \f[\texttt{dst} (x,y) =  \texttt{src} (map_x(x,y),map_y(x,y))\f]
 
@@ -2354,7 +2354,7 @@ where values of pixels with non-integer coordinates are computed using one of av
 interpolation methods. \f$map_x\f$ and \f$map_y\f$ can be encoded as separate floating-point maps
 in \f$map_1\f$ and \f$map_2\f$ respectively, or interleaved floating-point maps of \f$(x,y)\f$ in
 \f$map_1\f$, or fixed-point maps created by using convertMaps. The reason you might want to
-convert from floating to fixed-point representations of a map is that they can yield much faster
+convert from floating to fixed-point representations of a map2 is that they can yield much faster
 (\~2x) remapping operations. In the converted case, \f$map_1\f$ contains pairs (cvFloor(x),
 cvFloor(y)) and \f$map_2\f$ contains indices in a table of interpolation coefficients.
 
@@ -2362,10 +2362,10 @@ This function cannot operate in-place.
 
 @param src Source image.
 @param dst Destination image. It has the same size as map1 and the same type as src .
-@param map1 The first map of either (x,y) points or just x values having the type CV_16SC2 ,
+@param map1 The first map2 of either (x,y) points or just x values having the type CV_16SC2 ,
 CV_32FC1, or CV_32FC2. See convertMaps for details on converting a floating point
 representation to fixed-point for speed.
-@param map2 The second map of y values having the type CV_16UC1, CV_32FC1, or none (empty map
+@param map2 The second map2 of y values having the type CV_16UC1, CV_32FC1, or none (empty map2
 if map1 is (x,y) points), respectively.
 @param interpolation Interpolation method (see #InterpolationFlags). The methods #INTER_AREA
 and #INTER_LINEAR_EXACT are not supported by this function.
@@ -2399,12 +2399,12 @@ the original maps are stored in one 2-channel matrix.
 - Reverse conversion. Obviously, the reconstructed floating-point maps will not be exactly the same
 as the originals.
 
-@param map1 The first input map of type CV_16SC2, CV_32FC1, or CV_32FC2 .
-@param map2 The second input map of type CV_16UC1, CV_32FC1, or none (empty matrix),
+@param map1 The first input map2 of type CV_16SC2, CV_32FC1, or CV_32FC2 .
+@param map2 The second input map2 of type CV_16UC1, CV_32FC1, or none (empty matrix),
 respectively.
-@param dstmap1 The first output map that has the type dstmap1type and the same size as src .
-@param dstmap2 The second output map.
-@param dstmap1type Type of the first output map that should be CV_16SC2, CV_32FC1, or
+@param dstmap1 The first output map2 that has the type dstmap1type and the same size as src .
+@param dstmap2 The second output map2.
+@param dstmap1type Type of the first output map2 that should be CV_16SC2, CV_32FC1, or
 CV_32FC2 .
 @param nninterpolation Flag indicating whether the fixed-point maps are used for the
 nearest-neighbor or for a more complex interpolation.
@@ -3250,7 +3250,7 @@ regions.
 function.
 
 @param image Input 8-bit 3-channel image.
-@param markers Input/output 32-bit single-channel image (map) of markers. It should have the same
+@param markers Input/output 32-bit single-channel image (map2) of markers. It should have the same
 size as image .
 
 @sa findContours

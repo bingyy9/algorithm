@@ -18,6 +18,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcel;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,12 +31,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     static boolean toggleFaceDetection = false;
     static boolean toggleBankCardDetection = true;
+    public static final int MAX = Integer.MAX_VALUE;
 
     public static final String TAG = "MainActivity";
 
@@ -104,21 +105,21 @@ public class MainActivity extends AppCompatActivity {
         setLocalCache();
         exception();
         systemArrayCopy();
+
+        graphTest();
     }
 
     public void compressVideo(View view) {
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Throwable {
-                        if(aBoolean){
-                            compressVideo();
-                        }
+            .subscribe(new Consumer<Boolean>() {
+                @Override
+                public void accept(Boolean aBoolean) throws Throwable {
+                    if(aBoolean){
+                        compressVideo();
                     }
-                });
-
-
+                }
+            });
     }
 
     private void compressVideo(){
@@ -243,4 +244,51 @@ public class MainActivity extends AppCompatActivity {
         }
         super.startActivityForResult(intent, requestCode);
     }
+
+    void graphTest(){
+//        Log.e(TAG, "Graph Test Start >>>>>");
+//        int vertexSize = 9;
+//        int[] vertexes = new int[9];
+//        for(int i=0; i<vertexSize; i++){
+//            vertexes[i] = i;
+//        }
+//
+//        //9个顶点，8条边
+//        int[][]matrix = {
+//                {0, 1, 1, 0, 0, 0, 0, 0, 0},
+//                {1, 0, 1, 1, 1, 0, 0, 0, 0},
+//                {1, 1, 0, 0, 1, 1, 0, 0, 0},
+//                {0, 1, 0, 0, 1, 0, 1, 0, 0},
+//                {0, 1, 1, 1, 0, 1, 1, 1, 0},
+//                {0, 0, 1, 0, 1, 0, 0, 1, 0},
+//                {0, 0, 0, 1, 1, 0, 0, 1, 1},
+//                {0, 0, 0, 0, 1, 1, 1, 0, 1},
+//                {0, 0, 0, 0, 0, 0, 1, 1, 0}
+//            };
+//
+//        int[][]matrix_weight = {
+//                {0, 1, 5, MAX, MAX, MAX, MAX, MAX, MAX},
+//                {1, 0, 3, 7, 5, MAX, MAX, MAX, MAX},
+//                {5, 3, 0, MAX, 1, 7, MAX, MAX, MAX},
+//                {MAX, 7, MAX, 0, 2, MAX, 1, MAX, MAX},
+//                {MAX, 5, 1, 2, 0, 3, 6, 9, MAX},
+//                {MAX, MAX, 7, MAX, 3, 0, MAX, 5, 0},
+//                {MAX, MAX, MAX, 3, 6, MAX, 0, 2, 7},
+//                {MAX, MAX, MAX, MAX, 9, 5, 2, 0, 4},
+//                {MAX, MAX, MAX, MAX, MAX, MAX, 7, 4, 0}
+//        };
+//
+//        Graph graph = new Graph(vertexSize, vertexes, matrix_weight);
+//        graph.prim();
+//        Log.e(TAG, "Graph Test End >>>>>");
+//        LeeCodeTest();
+    }
+
+    void LeeCodeTest(){
+        Log.e(TAG, "LeeCodeTest Start >>>>>");
+        LeeCode.twoSum_();
+        Log.e(TAG, "LeeCodeTest End >>>>>");
+    }
+
+
 }

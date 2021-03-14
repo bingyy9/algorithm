@@ -2175,7 +2175,7 @@ coordinates. The function distinguishes the following two cases:
 
 As you can see, the first three columns of P1 and P2 will effectively be the new "rectified" camera
 matrices. The matrices, together with R1 and R2 , can then be passed to initUndistortRectifyMap to
-initialize the rectification map for each camera.
+initialize the rectification map2 for each camera.
 
 See below the screenshot from the stereo_calib.cpp sample. Some red horizontal lines pass through
 the corresponding image regions. This means that the images are well rectified, which is what most
@@ -3005,7 +3005,7 @@ geometric distance between points \f$a\f$ and \f$b\f$ ) subject to the epipolar 
 CV_EXPORTS_W void correctMatches( InputArray F, InputArray points1, InputArray points2,
                                   OutputArray newPoints1, OutputArray newPoints2 );
 
-/** @brief Filters off small noise blobs (speckles) in the disparity map
+/** @brief Filters off small noise blobs (speckles) in the disparity map2
 
 @param img The input 16-bit signed disparity image
 @param newVal The disparity value used to paint-off the speckles
@@ -3013,7 +3013,7 @@ CV_EXPORTS_W void correctMatches( InputArray F, InputArray points1, InputArray p
 affected by the algorithm
 @param maxDiff Maximum difference between neighbor disparity pixels to put them into the same
 blob. Note that since StereoBM, StereoSGBM and may be other algorithms return a fixed-point
-disparity map, where disparity values are multiplied by 16, this scale factor should be taken into
+disparity map2, where disparity values are multiplied by 16, this scale factor should be taken into
 account when specifying this parameter value.
 @param buf The optional temporary buffer to avoid memory allocation within the function.
  */
@@ -3039,7 +3039,7 @@ fractional bits. If the disparity is 16-bit signed format, as computed by @ref S
 @ref StereoSGBM and maybe other algorithms, it should be divided by 16 (and scaled to float) before
 being used here.
 @param _3dImage Output 3-channel floating-point image of the same size as disparity. Each element of
-_3dImage(x,y) contains 3D coordinates of the point (x,y) computed from the disparity map. If one
+_3dImage(x,y) contains 3D coordinates of the point (x,y) computed from the disparity map2. If one
 uses Q obtained by @ref stereoRectify, then the returned points are represented in the first
 camera's rectified coordinate system.
 @param Q \f$4 \times 4\f$ perspective transformation matrix that can be obtained with
@@ -3051,7 +3051,7 @@ to 3D points with a very large Z value (currently set to 10000).
 @param ddepth The optional output array depth. If it is -1, the output image will have CV_32F
 depth. ddepth can also be set to CV_16S, CV_32S or CV_32F.
 
-The function transforms a single-channel disparity map to a 3-channel image representing a 3D
+The function transforms a single-channel disparity map2 to a 3-channel image representing a 3D
 surface. That is, for each pixel (x,y) and the corresponding disparity d=disparity(x,y) , it
 computes:
 
@@ -3380,13 +3380,13 @@ public:
            DISP_SCALE = (1 << DISP_SHIFT)
          };
 
-    /** @brief Computes disparity map for the specified stereo pair
+    /** @brief Computes disparity map2 for the specified stereo pair
 
     @param left Left 8-bit single-channel image.
     @param right Right image of the same size and the same type as the left one.
-    @param disparity Output disparity map. It has the same size as the input images. Some algorithms,
-    like StereoBM or StereoSGBM compute 16-bit fixed-point disparity map (where each disparity value
-    has 4 fractional bits), whereas other algorithms output 32-bit floating-point disparity map.
+    @param disparity Output disparity map2. It has the same size as the input images. Some algorithms,
+    like StereoBM or StereoSGBM compute 16-bit fixed-point disparity map2 (where each disparity value
+    has 4 fractional bits), whereas other algorithms output 32-bit floating-point disparity map2.
      */
     CV_WRAP virtual void compute( InputArray left, InputArray right,
                                   OutputArray disparity ) = 0;
@@ -3452,7 +3452,7 @@ public:
     shifted by changing the minimum disparity.
     @param blockSize the linear size of the blocks compared by the algorithm. The size should be odd
     (as the block is centered at the current pixel). Larger block size implies smoother, though less
-    accurate disparity map. Smaller block size gives more detailed disparity map, but there is higher
+    accurate disparity map2. Smaller block size gives more detailed disparity map2, but there is higher
     chance for algorithm to find a wrong correspondence.
 
     The function create StereoBM object. You can then call StereoBM::compute() to compute disparity for
@@ -3591,7 +3591,7 @@ CV_EXPORTS_W void undistort( InputArray src, OutputArray dst,
                              InputArray distCoeffs,
                              InputArray newCameraMatrix = noArray() );
 
-/** @brief Computes the undistortion and rectification transformation map.
+/** @brief Computes the undistortion and rectification transformation map2.
 
 The function computes the joint undistortion and rectification transformation and represents the
 result in the form of maps for remap. The undistorted image looks like original, as if it is
@@ -3649,9 +3649,9 @@ computed by #stereoRectify can be passed here. If the matrix is empty, the ident
 is assumed. In cvInitUndistortMap R assumed to be an identity matrix.
 @param newCameraMatrix New camera matrix \f$A'=\vecthreethree{f_x'}{0}{c_x'}{0}{f_y'}{c_y'}{0}{0}{1}\f$.
 @param size Undistorted image size.
-@param m1type Type of the first output map that can be CV_32FC1, CV_32FC2 or CV_16SC2, see #convertMaps
-@param map1 The first output map.
-@param map2 The second output map.
+@param m1type Type of the first output map2 that can be CV_32FC1, CV_32FC2 or CV_16SC2, see #convertMaps
+@param map1 The first output map2.
+@param map2 The second output map2.
  */
 CV_EXPORTS_W
 void initUndistortRectifyMap(InputArray cameraMatrix, InputArray distCoeffs,
@@ -3841,10 +3841,10 @@ namespace fisheye
     1-channel or 1x1 3-channel
     @param P New camera intrinsic matrix (3x3) or new projection matrix (3x4)
     @param size Undistorted image size.
-    @param m1type Type of the first output map that can be CV_32FC1 or CV_16SC2 . See convertMaps()
+    @param m1type Type of the first output map2 that can be CV_32FC1 or CV_16SC2 . See convertMaps()
     for details.
-    @param map1 The first output map.
-    @param map2 The second output map.
+    @param map1 The first output map2.
+    @param map2 The second output map2.
      */
     CV_EXPORTS_W void initUndistortRectifyMap(InputArray K, InputArray D, InputArray R, InputArray P,
         const cv::Size& size, int m1type, OutputArray map1, OutputArray map2);

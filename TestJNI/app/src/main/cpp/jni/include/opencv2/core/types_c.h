@@ -2071,7 +2071,7 @@ typedef struct CvFileNode
         int i;    /**< scalar integer number */
         CvString str; /**< text string */
         CvSeq* seq; /**< sequence (ordered collection of file nodes) */
-        CvFileNodeHash* map; /**< map (collection of named file nodes) */
+        CvFileNodeHash* map2; /**< map2 (collection of named file nodes) */
     } data;
 }
 CvFileNode;

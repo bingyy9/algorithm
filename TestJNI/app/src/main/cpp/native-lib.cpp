@@ -35,6 +35,9 @@
 #include "PriorityQueue.hpp"
 #include "BSTree.hpp"
 #include "AVLTree.hpp"
+#include "map2.hpp"
+#include "HuffmanTree.h"
+#include "LeeCode.h"
 
 using namespace std;
 using namespace cv;
@@ -226,7 +229,9 @@ char* str_replace(char* str, char* src, char* dst){
 
 extern "C" JNIEXPORT void JNICALL
 Java_com_example_testjni_VideoCompress_compressVideo(JNIEnv *env, jobject thiz, jobjectArray compress_command, jobject callback) {
-    //for每一帧
+//    jstring j_command_str = (jstring)env->CallObjectMethod(signatures_first, j_mid);
+//    const char * signature_str = env->GetStringUTFChars(j_signature_str, NULL);
+
 }
 
 extern "C" JNIEXPORT jstring JNICALL
@@ -382,6 +387,49 @@ void hannuota(int n, char start, char help, char end){
     hannuota(n-1, help, start, end);
 }
 
+void LeeCodeTest(){
+    LOGE("LeeCodeTest Native Start=====");
+    int i = LeeCode::reverse(42);
+
+    LOGE("-42/10 = %d, %d" , (-42/10) , -42%10);
+    LOGE("i = ", i);
+    LOGE("LeeCodeTest Native End=====");
+}
+
+void huffmanTest(){
+    LOGE("huffmanTest");
+
+    char* str = "aaaabbcccccccd";
+    HuffmanTree huffmanTree;
+    hTree* tree = huffmanTree.createHuffmanTree(str);
+    hTable* table = huffmanTree.createHuffmanTable(tree);
+    string str_encode;
+    huffmanTree.encode(table, str, &str_encode);
+    LOGE("str_encode: %s", str_encode.c_str());
+
+    LeeCodeTest();
+}
+
+void mapTest(){
+    LOGE("map2 test for red black tree.");
+    map2<int, int> *m = new map2<int, int>();
+    m->insert(3, 3);
+    m->insert(2, 2);
+    m->insert(1, 1);
+    m->insert(4, 4);
+    m->insert(5, 5);
+    m->insert(-5, -5);
+    m->insert(-15, -15);
+    m->insert(-10, -10);
+    m->insert(6, 6);
+    m->insert(7, 7);
+
+    m->layer_traverse();
+
+
+    huffmanTest();
+}
+
 void AVLTreeTest(){
     LOGE("AVLTreeTest--------");
     AVLTree<int, int> *avlTree = new AVLTree<int, int>();
@@ -405,32 +453,34 @@ void AVLTreeTest(){
     avlTree->layer_traverse();
     avlTree->remove(2);
     avlTree->layer_traverse();
+
+    mapTest();
 }
 
 void main4(){
     BSTree<int, int> *bsTree = new BSTree<int, int>();
     //(2, -11, -13, 0, 3, 8, 7)
-//    bsTree->put2(2, 2);
-//    bsTree->put2(-11, -11);
-//    bsTree->put2(-13, -13);
+    bsTree->put2(2, 2);
+    bsTree->put2(-11, -11);
+    bsTree->put2(-13, -13);
 //    bsTree->put2(0, 0);
-//    bsTree->put2(3, 3);
-//    bsTree->put2(8, 8);
-//    bsTree->put2(7, 7);
-    bsTree->put(2, 2);
-    bsTree->put(-11, -11);
-    bsTree->put(-13, -13);
-    bsTree->put(0, 0);
-    bsTree->put(3, 3);
-    bsTree->put(8, 8);
-    bsTree->put(7, 7);
+    bsTree->put2(3, 3);
+    bsTree->put2(8, 8);
+    bsTree->put2(7, 7);
+//    bsTree->put(2, 2);
+//    bsTree->put(-11, -11);
+//    bsTree->put(-13, -13);
+//    bsTree->put(0, 0);
+//    bsTree->put(3, 3);
+//    bsTree->put(8, 8);
+//    bsTree->put(7, 7);
 
-    LOGE("in_order_traverse BSTree");
-    bsTree->in_order_traverse(bsTree->root);
+    LOGE("layer_traverse BSTree");
+    bsTree->layer_traverse(bsTree->root);
 
-//    bsTree->remove(2);
-    LOGE("in_order_traverse BSTree");
-    bsTree->in_order_traverse(bsTree->root);
+    bsTree->remove(2);
+    LOGE("layer_traverse BSTree");
+    bsTree->layer_traverse(bsTree->root);
 
     AVLTreeTest();
 }
